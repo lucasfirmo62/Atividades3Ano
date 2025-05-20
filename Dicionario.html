@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <title>Leitura de Arquivo</title>
+  <h2>Selecione um arquivo de texto:</h2>
+  <input type="file" id="fileInput" accept=".txt,.csv,.json">
+  <pre id="fileContent"></pre>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        const content = e.target.result;
+        document.getElementById('fileContent').textContent = content;
+      };
+
+      reader.onerror = function() {
+        alert('Erro ao ler o arquivo!');
+      };
+
+      reader.readAsText(file); 
+    });
+  </script>
+</body>
+</html>
