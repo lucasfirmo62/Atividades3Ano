@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cubo 3D Interativo</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1000px;
+      overflow: hidden;
+    }
+
+    .scene {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.1s;
+    }
+
+    .face {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #0ff;
+      color: #0ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      font-size: 24px;
+    }
+
+    .front  { transform: translateZ(100px); }
+    .back   { transform: rotateY(180deg) translateZ(100px); }
+    .right  { transform: rotateY(90deg) translateZ(100px); }
+    .left   { transform: rotateY(-90deg) translateZ(100px); }
+    .top    { transform: rotateX(90deg) translateZ(100px); }
+    .bottom { transform: rotateX(-90deg) translateZ(100px); }
+  </style>
+</head>
+<body>
+  <div class="scene" id="cube">
+    <div class="face front">Frente</div>
+    <div class="face back">Trás</div>
+    <div class="face right">Direita</div>
+    <div class="face left">Esquerda</div>
+    <div class="face top">Topo</div>
+    <div class="face bottom">Fundo</div>
+  </div>
+
+  <script>
+    const cube = document.getElementById("cube");
+    let isDragging = false;
+    let startX, startY;
+    let currentX = 0, currentY = 0;
+
+    document.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      currentX += deltaY * 0.5;
+      currentY += deltaX * 0.5;
+      cube.style.transform = `rotateX(${currentX}deg) rotateY(${currentY}deg)`;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+  </script>
+</body>
+</html>
