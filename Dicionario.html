@@ -1,29 +1,71 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>Corretor de Texto</title>
+</head>
 <body>
-  <title>Leitura de Arquivo</title>
-  <h2>Selecione um arquivo de texto:</h2>
-  <input type="file" id="fileInput" accept=".txt,.csv,.json">
-  <pre id="fileContent"></pre>
+  <h2>Digite seu texto com erro:</h2>
+  <input type="text" id="inputText" style="width: 300px;">
+  <button onclick="corrigirTexto()">Corrigir</button>
+
+  <h3>Texto Corrigido:</h3>
+  <p id="textoCorrigido"></p>
 
   <script>
-    document.getElementById('fileInput').addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+    // Exemplo de dicionário simples
+    const dicionario = ["cachorro", "gato", "pato", "árvore", "computador", "livro"];
 
-      const reader = new FileReader();
+    function corrigirTexto() {
+      const textoOriginal = document.getElementById("inputText").value;
+      const palavras = textoOriginal.split(" ");
+      let corrigido = false;
 
-      reader.onload = function(e) {
-        const content = e.target.result;
-        document.getElementById('fileContent').textContent = content;
-      };
+      const textoCorrigido = palavras.map(palavra => {
+        if (!corrigido && !dicionario.includes(palavra.toLowerCase())) {
+          corrigido = true;
+          // Procurar a palavra mais parecida do dicionário (método simples: menor distância de Levenshtein)
+          return sugestaoMaisProxima(palavra.toLowerCase());
+        }
+        return palavra;
+      }).join(" ");
 
-      reader.onerror = function() {
-        alert('Erro ao ler o arquivo!');
-      };
+      document.getElementById("textoCorrigido").textContent = textoCorrigido;
+    }
 
-      reader.readAsText(file); 
-    });
+    function sugestaoMaisProxima(palavra) {
+      let melhor = "";
+      let menorDistancia = Infinity;
+
+      for (const item of dicionario) {
+        const dist = distanciaLevenshtein(palavra, item);
+        if (dist < menorDistancia) {
+          menorDistancia = dist;
+          melhor = item;
+        }
+      }
+
+      return melhor;
+    }
+
+    function distanciaLevenshtein(a, b) {
+      const matriz = Array.from({ length: a.length + 1 }, () => []);
+
+      for (let i = 0; i <= a.length; i++) matriz[i][0] = i;
+      for (let j = 0; j <= b.length; j++) matriz[0][j] = j;
+
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          const custo = a[i - 1] === b[j - 1] ? 0 : 1;
+          matriz[i][j] = Math.min(
+            matriz[i - 1][j] + 1,
+            matriz[i][j - 1] + 1,
+            matriz[i - 1][j - 1] + custo
+          );
+        }
+      }
+
+      return matriz[a.length][b.length];
+    }
   </script>
 </body>
 </html>
