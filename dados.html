@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Leitor de JSON</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Informações do Aluno</h1>
+  <div id="resultado"></div>
+
+  <script>
+    // JSON embutido no código
+    const jsonData = {
+      "aluno": {
+        "nome": "Lucas Ferreira",
+        "data_nascimento": "2003-07-15",
+        "notas": {
+          "matematica": 8.5,
+          "portugues": 9.0,
+          "historia": 7.8,
+          "ciencias": 8.2
+        }
+      }
+    };
+
+    // Acessando os dados
+    const aluno = jsonData.aluno;
+    const notas = aluno.notas;
+
+    // Criando HTML dinamicamente
+    const html = `
+      <p><strong>Nome:</strong> ${aluno.nome}</p>
+      <p><strong>Data de Nascimento:</strong> ${aluno.data_nascimento}</p>
+      <h3>Notas:</h3>
+      <ul>
+        <li><strong>Matemática:</strong> ${notas.matematica}</li>
+        <li><strong>Português:</strong> ${notas.portugues}</li>
+        <li><strong>História:</strong> ${notas.historia}</li>
+        <li><strong>Ciências:</strong> ${notas.ciencias}</li>
+      </ul>
+    `;
+
+    // Inserindo no DOM
+    document.getElementById('resultado').innerHTML = html;
+  </script>
+
+</body>
+</html>
